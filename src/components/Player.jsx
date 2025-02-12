@@ -7,10 +7,9 @@ import {
   faPauseCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import { formatTimeInSeconds } from "../utils/formatTimeInSeconds";
-import { convertStringTimeToSeconds } from "../utils/convertStringTimeToSeconds";
+import { convertStringTimeToSeconds } from "../utils/convertStringsTimeToSeconds.js"; // Adicionando extensão para garantir a resolução correta
 import { songsArray } from "../assets/database/songs";
 import { Link } from "react-router-dom";
-import { songsIndexedById } from "../assets/database/songs";
 
 const Player = ({ duration, audio, artist, _id }) => {
   const audioPlayer = useRef();
@@ -19,12 +18,12 @@ const Player = ({ duration, audio, artist, _id }) => {
     isPlaying: false,
     currentTime: formatTimeInSeconds(0),
   });
+
   const { isPlaying, currentTime } = songStatus;
   const durationInSeconds = convertStringTimeToSeconds(duration);
 
   const playPauseMusic = () => {
     isPlaying ? audioPlayer.current.pause() : audioPlayer.current.play();
-
     updateSongStatus(!songStatus.isPlaying, audioPlayer.current.currentTime);
   };
 
@@ -43,7 +42,6 @@ const Player = ({ duration, audio, artist, _id }) => {
   const resetSong = () => {
     audioPlayer.current.pause();
     audioPlayer.current.currentTime = 0;
-
     updateSongStatus(false, 0);
   };
 
@@ -59,7 +57,6 @@ const Player = ({ duration, audio, artist, _id }) => {
     const intervalId = setInterval(() => {
       if (isPlaying) {
         const timeNowInSeconds = audioPlayer.current.currentTime;
-
         updateSongStatus(songStatus.isPlaying, timeNowInSeconds);
       }
     }, 1000);
@@ -70,24 +67,24 @@ const Player = ({ duration, audio, artist, _id }) => {
   return (
     <div className="player">
       <div className="player__controllers">
-        <Link to={previusNextSongPath()} onClick={() => resetSong()}>
+        <Link to={previusNextSongPath()} onClick={resetSong}>
           <FontAwesomeIcon
             className="player__icon player__icon--backward"
             icon={faBackwardStep}
-          ></FontAwesomeIcon>
+          />
         </Link>
 
         <FontAwesomeIcon
           className="player__icon player__icon--play"
           icon={songStatus.isPlaying ? faPauseCircle : faPlayCircle}
-          onClick={() => playPauseMusic()}
-        ></FontAwesomeIcon>
+          onClick={playPauseMusic}
+        />
 
-        <Link to={previusNextSongPath()} onClick={() => resetSong()}>
+        <Link to={previusNextSongPath()} onClick={resetSong}>
           <FontAwesomeIcon
             className="player__icon player__icon--forward"
             icon={faForwardStep}
-          ></FontAwesomeIcon>
+          />
         </Link>
       </div>
 
